@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Task 7: Remote Work Landscape & Trends | WorkPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-50 text-cyan-700 text-xs font-mono font-semibold mb-2">
+        Deliverable: Task 7 Comprehensive Remote Landscape Report
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Trends in the Remote Work Landscape</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Cross-border talent arbitrage, asynchronous work penetration, contract structures, and data-backed forecasts through 2026.
+      </p>
+    </div>
+  </div>
+
+  <!-- Key Remote Indicators Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hourly Tracking Share</div>
+      <div class="mt-2 text-3xl font-extrabold text-blue-600">{{ t7.remote_landscape_overview.hourly_contracts_share_pct }}%</div>
+      <div class="mt-2 text-xs text-slate-500">
+        Preferred for ongoing remote roles
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tier-1 Client Concentration</div>
+      <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ t7.remote_landscape_overview.tier_1_client_share_pct }}%</div>
+      <div class="mt-2 text-xs text-slate-500">
+        US, UK, CA, AU, DE, CH
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Geo Wage Premium</div>
+      <div class="mt-2 text-3xl font-extrabold text-emerald-600">+{{ t7.remote_landscape_overview.geo_wage_premium_pct }}%</div>
+      <div class="mt-2 text-xs text-slate-500">
+        Tier-1 clients vs emerging market clients
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Market Dispersion (HHI)</div>
+      <div class="mt-2 text-3xl font-extrabold text-indigo-600">{{ t7.remote_landscape_overview.geographic_hhi_concentration }}</div>
+      <div class="mt-2 text-xs text-slate-500">
+        Moderate concentration with global long tail
+      </div>
+    </div>
+  </div>
+
+  <!-- Remote Keywords Adoption -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+      <h2 class="text-lg font-bold text-slate-900">Prevalence of Remote & Asynchronous Work Patterns</h2>
+      <p class="text-xs text-slate-500">Frequency of remote-first qualifiers and their associated compensation rates</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-4">Remote Work Descriptor</th>
+            <th class="py-3 px-4 text-right">Job Postings Matched</th>
+            <th class="py-3 px-4 text-right">Penetration (% of Total)</th>
+            <th class="py-3 px-4 text-right">Average Offered Rate</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 font-mono">
+          {% for rkw in t7.remote_keywords_adoption %}
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-sans font-bold text-slate-900">{{ rkw.term }}</td>
+            <td class="py-3 px-4 text-right text-slate-600">{{ "{:,}".format(rkw.count) }}</td>
+            <td class="py-3 px-4 text-right font-bold text-blue-600">{{ rkw.percentage }}%</td>
+            <td class="py-3 px-4 text-right font-bold text-slate-900">${{ rkw.avg_hourly_rate }}/hr</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Data-Backed Quarterly Remote Forecast Table -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+      <h2 class="text-lg font-bold text-slate-900">Data-Backed Forecasts: Global Remote Freelance Market (2024 - 2026)</h2>
+      <p class="text-xs text-slate-500">Projected quarterly volume growth, rate convergence, and hourly contract share</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-4">Quarter</th>
+            <th class="py-3 px-4 text-right">Projected Market Volume</th>
+            <th class="py-3 px-4 text-right">Projected Mean Hourly Rate</th>
+            <th class="py-3 px-4 text-right">Hourly Contract Share</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 font-mono">
+          {% for q in t7.quarterly_remote_forecast.quarters %}
+          {% set i = loop.index0 %}
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-sans font-bold text-slate-900">{{ q }}</td>
+            <td class="py-3 px-4 text-right text-blue-600">{{ "{:,}".format(t7.quarterly_remote_forecast.projected_postings[i]) }}</td>
+            <td class="py-3 px-4 text-right font-bold text-emerald-600">${{ t7.quarterly_remote_forecast.projected_avg_hourly_rate[i] }}/hr</td>
+            <td class="py-3 px-4 text-right text-slate-700">{{ t7.quarterly_remote_forecast.projected_hourly_share_pct[i] }}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

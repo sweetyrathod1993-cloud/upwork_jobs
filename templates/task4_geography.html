@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Task 4: Global Hourly Rates by Country | WorkPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 text-xs font-mono font-semibold mb-2">
+        Deliverable: Task 4 Interactive Map & Geospatial Report
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Compare Average Hourly Rates Across Countries</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Geographical aggregation across {{ t4.global_benchmarks.total_countries }} countries, regional wage disparity, and talent compensation indices.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm text-right">
+        <div class="text-xs text-slate-400">Global Average Rate</div>
+        <div class="text-xl font-bold text-slate-900">${{ t4.global_benchmarks.overall_mean_hourly }}<span class="text-xs font-normal text-slate-500">/hr</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive World Map Card -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+    <div class="mb-4">
+      <h2 class="text-lg font-bold text-slate-900">Interactive Global Hourly Rates Choropleth Map</h2>
+      <p class="text-xs text-slate-500">Hover over any country to inspect average hourly rates, total postings, and predominant job category</p>
+    </div>
+    <div id="country-map" class="w-full"></div>
+  </div>
+
+  <!-- Regional Breakdown Cards -->
+  <div>
+    <h2 class="text-xl font-bold text-slate-900 mb-4">Regional Hourly Compensation Benchmarks</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {% for reg in t4.regional_breakdown %}
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 card-hover shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500">{{ reg.region }}</span>
+            <span class="badge-tag bg-slate-100 text-slate-600 font-mono text-[10px]">{{ "{:,}".format(reg.total_jobs) }} jobs</span>
+          </div>
+          <div class="mt-2 text-2xl font-extrabold text-slate-900">${{ reg.mean_hourly_rate }}<span class="text-xs font-normal text-slate-500">/hr</span></div>
+          <p class="text-xs text-slate-500 mt-1">Median: ${{ reg.median_hourly_rate }}/hr | Avg Budget: ${{ reg.mean_budget }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Dual Tables: Top Paying vs Top Volume -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Top Paying Countries -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-100">
+        <h2 class="text-base font-bold text-slate-900">Top 15 Highest-Paying Countries (Min 50 Postings)</h2>
+        <p class="text-xs text-slate-500">Ranked by mean hourly rate offered by clients in location</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+            <tr>
+              <th class="py-2.5 px-4">Country</th>
+              <th class="py-2.5 px-4 text-right">Mean Rate</th>
+              <th class="py-2.5 px-4 text-right">Median</th>
+              <th class="py-2.5 px-4 text-right">Postings</th>
+              <th class="py-2.5 px-4 text-right">Top Sector</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-mono">
+            {% for c in t4.top_paying_countries[:15] %}
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-2.5 px-4 font-sans font-bold text-slate-900">{{ c.country }}</td>
+              <td class="py-2.5 px-4 text-right font-bold text-emerald-600">${{ c.mean_hourly_rate }}/hr</td>
+              <td class="py-2.5 px-4 text-right text-slate-600">${{ c.median_hourly_rate }}</td>
+              <td class="py-2.5 px-4 text-right text-slate-600">{{ "{:,}".format(c.total_jobs) }}</td>
+              <td class="py-2.5 px-4 text-right font-sans text-slate-500 text-[11px] truncate max-w-[120px]">{{ c.top_category }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Top Volume Countries -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 border-b border-slate-100">
+        <h2 class="text-base font-bold text-slate-900">Top 15 Largest Client Hiring Markets</h2>
+        <p class="text-xs text-slate-500">Ranked by total posting volume across all categories</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+            <tr>
+              <th class="py-2.5 px-4">Country</th>
+              <th class="py-2.5 px-4 text-right">Total Jobs</th>
+              <th class="py-2.5 px-4 text-right">Hourly %</th>
+              <th class="py-2.5 px-4 text-right">Mean Rate</th>
+              <th class="py-2.5 px-4 text-right">Mean Budget</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 font-mono">
+            {% for c in t4.top_volume_countries[:15] %}
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-2.5 px-4 font-sans font-bold text-slate-900">{{ c.country }}</td>
+              <td class="py-2.5 px-4 text-right font-bold text-blue-600">{{ "{:,}".format(c.total_jobs) }}</td>
+              <td class="py-2.5 px-4 text-right text-slate-600">{{ c.hourly_ratio_pct }}%</td>
+              <td class="py-2.5 px-4 text-right text-slate-900">${{ c.mean_hourly_rate }}/hr</td>
+              <td class="py-2.5 px-4 text-right text-slate-600">${{ c.mean_budget }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const mapData = {{ chart_json | safe }};
+  Plotly.newPlot('country-map', mapData.data, mapData.layout, {responsive: true});
+</script>
+{% endblock %}

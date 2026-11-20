@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation & Interactive Console | WorkPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div class="border-b border-slate-200 pb-5">
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 text-white text-xs font-mono font-semibold mb-2">
+      REST API Documentation & Interactive Swagger Console
+    </div>
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">WorkPulse Analytics REST API</h1>
+    <p class="text-sm text-slate-500 mt-1">
+      Open, high-performance RESTful endpoints powering recommendations, labor market analytics, predictive forecasting, and automated data updates.
+    </p>
+  </div>
+
+  <!-- API Endpoints Accordion / Interactive Tester -->
+  <div class="space-y-6">
+
+    <!-- Endpoint 1: POST /api/recommend (TASK 5) -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-6 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-md bg-blue-600 text-white font-mono font-bold text-xs">POST</span>
+          <span class="font-mono text-sm sm:text-base font-semibold">/api/recommend</span>
+          <span class="text-xs text-slate-400 hidden sm:inline">(Task 5 Personalized Recommendation Engine)</span>
+        </div>
+        <button onclick="testRecommend()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition">
+          Test Request →
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-xs">
+        <p class="text-slate-600 leading-relaxed">
+          Executes semantic TF-IDF cosine similarity search on the pre-indexed 50,000 Upwork job postings corpus, applying multi-criteria re-ranking, minimum compensation filters, and match percentage calculations.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="font-bold text-slate-700 uppercase tracking-wider mb-1">Request Payload (JSON)</div>
+            <pre class="bg-slate-950 text-slate-200 p-3 rounded-xl overflow-x-auto"><code id="rec-req-payload">{
+  "query": "Senior React Python developer",
+  "category": "Software & Web Development",
+  "min_rate": 30.0,
+  "top_k": 3
+}</code></pre>
+          </div>
+          <div>
+            <div class="font-bold text-slate-700 uppercase tracking-wider mb-1">Live Response Output</div>
+            <pre class="bg-slate-950 text-emerald-400 p-3 rounded-xl overflow-x-auto max-h-48"><code id="rec-res-output">// Click "Test Request" to inspect live response...</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Endpoint 2: GET /api/jobs -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 bg-slate-100 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-mono font-bold text-xs">GET</span>
+          <span class="font-mono text-sm font-semibold text-slate-900">/api/jobs</span>
+          <span class="text-xs text-slate-500 hidden sm:inline">Search, filter, and paginate through all 244,828 jobs via indexed SQLite</span>
+        </div>
+        <button onclick="testJobs()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">
+          Execute GET
+        </button>
+      </div>
+
+      <div class="p-5 space-y-3 text-xs">
+        <div class="text-slate-600">
+          <strong>Query Parameters:</strong> <code>keyword</code>, <code>category</code>, <code>country</code>, <code>is_hourly</code>, <code>min_rate</code>, <code>limit</code>, <code>offset</code>
+        </div>
+        <pre class="bg-slate-950 text-emerald-400 p-3 rounded-xl overflow-x-auto max-h-40"><code id="jobs-res-output">// Response appears here...</code></pre>
+      </div>
+    </div>
+
+    <!-- Endpoint 3: GET /api/task3/forecasts -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 bg-slate-100 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-mono font-bold text-xs">GET</span>
+          <span class="font-mono text-sm font-semibold text-slate-900">/api/task3/forecasts</span>
+          <span class="text-xs text-slate-500 hidden sm:inline">(Task 3 Demand Predictive Models & Time Series)</span>
+        </div>
+        <button onclick="testForecasts()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">
+          Execute GET
+        </button>
+      </div>
+      <div class="p-5 space-y-3 text-xs">
+        <div class="text-slate-600">Returns evaluation metrics (MAE, RMSE, MAPE, R2) and 30-day confidence bands for all modeled sectors.</div>
+        <pre class="bg-slate-950 text-emerald-400 p-3 rounded-xl overflow-x-auto max-h-40"><code id="forecasts-res-output">// Response appears here...</code></pre>
+      </div>
+    </div>
+
+    <!-- Endpoint 4: POST /api/monthly/update -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-5 bg-slate-100 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-md bg-purple-600 text-white font-mono font-bold text-xs">POST</span>
+          <span class="font-mono text-sm font-semibold text-slate-900">/api/monthly/update</span>
+          <span class="text-xs text-slate-500 hidden sm:inline">(Task 6 Dynamic Monthly Ingestion Pipeline Webhook)</span>
+        </div>
+        <button onclick="testMonthlyUpdate()" class="px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold transition">
+          Execute POST
+        </button>
+      </div>
+      <div class="p-5 space-y-3 text-xs">
+        <div class="text-slate-600">Triggers re-computation of monthly trends and dynamic dashboard updates.</div>
+        <pre class="bg-slate-950 text-emerald-400 p-3 rounded-xl overflow-x-auto max-h-40"><code id="monthly-res-output">// Response appears here...</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function testRecommend() {
+    const payload = JSON.parse(document.getElementById('rec-req-payload').textContent);
+    fetch('/api/recommend', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('rec-res-output').textContent = JSON.stringify(data, null, 2);
+    });
+  }
+
+  function testJobs() {
+    fetch('/api/jobs?keyword=Python&limit=2')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('jobs-res-output').textContent = JSON.stringify(data, null, 2);
+    });
+  }
+
+  function testForecasts() {
+    fetch('/api/task3/forecasts')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('forecasts-res-output').textContent = JSON.stringify(data.models_summary, null, 2);
+    });
+  }
+
+  function testMonthlyUpdate() {
+    fetch('/api/monthly/update', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'refresh'})
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('monthly-res-output').textContent = JSON.stringify(data, null, 2);
+    });
+  }
+</script>
+{% endblock %}

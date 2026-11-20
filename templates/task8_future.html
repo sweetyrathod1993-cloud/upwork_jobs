@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Task 8: Future Job Market Trends & Scenarios Simulator | WorkPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-rose-50 text-rose-700 text-xs font-mono font-semibold mb-2">
+        Deliverable: Task 8 Predictive Analytics & Scenarios Report
+      </div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Predict Future Job Market Trends (2024 - 2026)</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Multi-scenario simulation modeling AI disruption, macroeconomic outsourcing pressures, and quantitative quarterly projections.
+      </p>
+    </div>
+  </div>
+
+  <!-- Interactive Scenario Simulation Controller -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h2 class="text-base font-bold text-slate-900">Custom Scenario Simulator Parameters</h2>
+        <p class="text-xs text-slate-500">Adjust macroeconomic and AI adoption multipliers to re-simulate market trajectories</p>
+      </div>
+      <button onclick="runSimulation()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-sm transition">
+        Run Scenario Simulation
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+      <div>
+        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+          <span>AI & Agentic Disruption Multiplier:</span>
+          <span id="ai-factor-val" class="text-rose-600 font-mono">1.0x</span>
+        </div>
+        <input type="range" id="ai-factor-slider" min="0.5" max="2.5" step="0.1" value="1.0" class="w-full accent-rose-600 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+          <span>0.5x (Slow Adoption)</span>
+          <span>1.0x (Baseline)</span>
+          <span>2.5x (Hyper-Disruption)</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+          <span>Enterprise Outsourcing Multiplier:</span>
+          <span id="outsourcing-factor-val" class="text-blue-600 font-mono">1.0x</span>
+        </div>
+        <input type="range" id="outsourcing-factor-slider" min="0.5" max="2.5" step="0.1" value="1.0" class="w-full accent-blue-600 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+          <span>0.5x (Domestic Focus)</span>
+          <span>1.0x (Baseline)</span>
+          <span>2.5x (Massive Offshore Wave)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Scenarios Line Chart -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+    <div class="mb-4">
+      <h2 class="text-lg font-bold text-slate-900">Quarterly Job Postings Trajectory (2024 - 2026)</h2>
+      <p class="text-xs text-slate-500">Comparing Baseline Steady State, AI Disruption, and Enterprise Outsourcing Surges</p>
+    </div>
+    <div id="scenarios-chart" class="w-full"></div>
+  </div>
+
+  <!-- 3 Scenarios Detailed Breakdown Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Scenario A -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200 card-hover shadow-sm flex flex-col justify-between">
+      <div>
+        <span class="badge-tag bg-blue-100 text-blue-800 font-mono text-xs font-bold">Scenario A</span>
+        <h3 class="font-bold text-slate-900 text-lg mt-2">{{ t8.scenarios.baseline.name }}</h3>
+        <p class="text-xs text-slate-500 mt-2 leading-relaxed">{{ t8.scenarios.baseline.description }}</p>
+
+        <div class="mt-4 space-y-2 border-t border-slate-100 pt-3 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Projected Volume:</span>
+            <span class="font-bold text-slate-900 font-mono">{{ "{:,}".format(t8.scenarios.baseline.terminal_volume_2026) }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Hourly Rate:</span>
+            <span class="font-bold text-blue-600 font-mono">${{ t8.scenarios.baseline.terminal_rate_2026 }}/hr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario B -->
+    <div class="bg-white p-6 rounded-3xl border border-emerald-200 bg-emerald-50/10 card-hover shadow-sm flex flex-col justify-between">
+      <div>
+        <span class="badge-tag bg-emerald-100 text-emerald-800 font-mono text-xs font-bold">Scenario B</span>
+        <h3 class="font-bold text-slate-900 text-lg mt-2">{{ t8.scenarios.ai_disruption.name }}</h3>
+        <p class="text-xs text-slate-500 mt-2 leading-relaxed">{{ t8.scenarios.ai_disruption.description }}</p>
+
+        <div class="mt-4 space-y-2 border-t border-slate-100 pt-3 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Projected Volume:</span>
+            <span class="font-bold text-slate-900 font-mono">{{ "{:,}".format(t8.scenarios.ai_disruption.terminal_volume_2026) }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Hourly Rate:</span>
+            <span class="font-bold text-emerald-600 font-mono">${{ t8.scenarios.ai_disruption.terminal_rate_2026 }}/hr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario C -->
+    <div class="bg-white p-6 rounded-3xl border border-amber-200 bg-amber-50/10 card-hover shadow-sm flex flex-col justify-between">
+      <div>
+        <span class="badge-tag bg-amber-100 text-amber-800 font-mono text-xs font-bold">Scenario C</span>
+        <h3 class="font-bold text-slate-900 text-lg mt-2">{{ t8.scenarios.economic_outsourcing.name }}</h3>
+        <p class="text-xs text-slate-500 mt-2 leading-relaxed">{{ t8.scenarios.economic_outsourcing.description }}</p>
+
+        <div class="mt-4 space-y-2 border-t border-slate-100 pt-3 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Projected Volume:</span>
+            <span class="font-bold text-slate-900 font-mono">{{ "{:,}".format(t8.scenarios.economic_outsourcing.terminal_volume_2026) }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">2026 Hourly Rate:</span>
+            <span class="font-bold text-amber-700 font-mono">${{ t8.scenarios.economic_outsourcing.terminal_rate_2026 }}/hr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Strategic Stakeholder Playbook -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+    <h2 class="text-lg font-bold text-slate-900 mb-4">Strategic Recommendations & Future Action Plan</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for st in t8.strategic_takeaways %}
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+        <div class="font-bold text-slate-900 text-sm mb-2 text-blue-700">{{ st.persona }}</div>
+        <p class="text-xs text-slate-600 leading-relaxed">{{ st.recommendation }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let currentChartData = {{ chart_json | safe }};
+  Plotly.newPlot('scenarios-chart', currentChartData.data, currentChartData.layout, {responsive: true});
+
+  const aiSlider = document.getElementById('ai-factor-slider');
+  const aiVal = document.getElementById('ai-factor-val');
+  const outSlider = document.getElementById('outsourcing-factor-slider');
+  const outVal = document.getElementById('outsourcing-factor-val');
+
+  aiSlider.addEventListener('input', (e) => {
+    aiVal.textContent = `${e.target.value}x`;
+  });
+
+  outSlider.addEventListener('input', (e) => {
+    outVal.textContent = `${e.target.value}x`;
+  });
+
+  function runSimulation() {
+    const ai = parseFloat(aiSlider.value);
+    const out = parseFloat(outSlider.value);
+
+    fetch(`/api/task8/scenarios?ai_factor=${ai}&outsourcing_factor=${out}`)
+      .then(res => res.json())
+      .then(data => {
+        const quarters = data.simulation_parameters.quarters;
+        const scs = data.scenarios;
+
+        const updateData = [
+          {
+            x: quarters,
+            y: scs.baseline.total_volume,
+            name: 'Scenario A (Baseline)',
+            mode: 'lines+markers',
+            line: {color: '#2563EB', width: 3}
+          },
+          {
+            x: quarters,
+            y: scs.ai_disruption.total_volume,
+            name: 'Scenario B (AI Disruption)',
+            mode: 'lines+markers',
+            line: {color: '#10B981', width: 3}
+          },
+          {
+            x: quarters,
+            y: scs.economic_outsourcing.total_volume,
+            name: 'Scenario C (Outsourcing)',
+            mode: 'lines+markers',
+            line: {color: '#F59E0B', width: 3}
+          }
+        ];
+
+        Plotly.react('scenarios-chart', updateData, currentChartData.layout);
+      });
+  }
+</script>
+{% endblock %}

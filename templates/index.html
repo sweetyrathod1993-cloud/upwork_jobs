@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | WorkPulse Job Market Analytics{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <!-- Hero Header -->
+  <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+    <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="max-w-3xl relative z-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-4 border border-blue-400/30">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Comprehensive Labor Analytics
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+        Job Market Analysis & Recommendation System
+      </h1>
+      <p class="mt-4 text-slate-300 text-base sm:text-lg leading-relaxed">
+        Empowering job seekers, recruiters, and data analysts with real-time labor intelligence, machine learning demand forecasts, salary regression modeling, and personalized content-based job recommendations across <strong>244,828 Upwork postings</strong>.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/recommend" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/30">
+          ⚡ Launch Job Recommender
+        </a>
+        <a href="/task3" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition backdrop-blur border border-white/10">
+          📈 View Demand Forecasts
+        </a>
+        <a href="/api/docs" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs transition">
+          Swagger / API
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Macro KPIs Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Analyzed Postings</div>
+      <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ "{:,}".format(metrics.total_jobs) }}</div>
+      <div class="mt-2 flex items-center text-xs text-emerald-600 font-medium">
+        <span class="inline-block mr-1">●</span> 100% Real-World Freelance Data
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Global Mean Hourly Rate</div>
+      <div class="mt-2 text-3xl font-extrabold text-blue-600">${{ metrics.task1.overall_metrics.overall_mean_hourly }}<span class="text-sm font-normal text-slate-500">/hr</span></div>
+      <div class="mt-2 text-xs text-slate-500">
+        Median: ${{ metrics.task1.overall_metrics.overall_median_hourly }}/hr (σ = ${{ metrics.task1.overall_metrics.overall_std_hourly }})
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hourly vs Fixed Share</div>
+      <div class="mt-2 text-3xl font-extrabold text-indigo-600">{{ metrics.task6.latest_month.pct_hourly }}%<span class="text-sm font-normal text-slate-500"> Hourly</span></div>
+      <div class="mt-2 text-xs text-slate-500">
+        Fixed-Price Share: {{ metrics.task6.latest_month.pct_fixed }}%
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover shadow-sm">
+      <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Hiring Countries</div>
+      <div class="mt-2 text-3xl font-extrabold text-slate-900">{{ metrics.task4.global_benchmarks.total_countries }}</div>
+      <div class="mt-2 text-xs text-slate-500">
+        Top Client: {{ metrics.task4.top_volume_countries[0].country }} ({{ "{:,}".format(metrics.task4.top_volume_countries[0].total_jobs) }} jobs)
+      </div>
+    </div>
+  </div>
+
+  <!-- Deliverables Navigation Grid -->
+  <div>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-slate-900 tracking-tight">Project Tasks & Core Deliverables</h2>
+      <span class="text-xs font-mono text-slate-500">All 8 Tasks Implemented & Verified</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Task 1 Card -->
+      <a href="/task1" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-blue-50 text-blue-700 font-mono">Task 1</span>
+            <span class="text-slate-400 group-hover:text-blue-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-blue-600 transition">Keyword-Salary Correlation</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Statistical correlation (Pearson, Spearman), ANOVA tests, and OLS regression coefficients quantifying salary premiums for technical skills.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Top Skill: <strong>{{ metrics.task1.top_paying_keywords[0].keyword }}</strong></span>
+          <span class="font-bold text-emerald-600">${{ metrics.task1.top_paying_keywords[0].mean_hourly_rate }}/hr</span>
+        </div>
+      </a>
+
+      <!-- Task 2 Card -->
+      <a href="/task2" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-emerald-50 text-emerald-700 font-mono">Task 2</span>
+            <span class="text-slate-400 group-hover:text-emerald-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-emerald-600 transition">Emerging Job Categories</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Identifies high-growth sectors, momentum metrics, and breakouts in Generative AI, LangChain, Next.js, and TikTok video editing.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Highest Momentum:</span>
+          <span class="font-bold text-emerald-600">{{ metrics.task2.category_growth_ranking[0].category }}</span>
+        </div>
+      </a>
+
+      <!-- Task 3 Card -->
+      <a href="/task3" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-indigo-50 text-indigo-700 font-mono">Task 3</span>
+            <span class="text-slate-400 group-hover:text-indigo-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-indigo-600 transition">Demand Forecasting Models</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Autoregressive machine learning time-series models with MAE, RMSE, MAPE accuracy metrics and 30-day confidence intervals.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Model Accuracy:</span>
+          <span class="font-bold text-indigo-600">R² = {{ metrics.task3.models_summary[0]['R² Score'] }}</span>
+        </div>
+      </a>
+
+      <!-- Task 4 Card -->
+      <a href="/task4" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-amber-50 text-amber-700 font-mono">Task 4</span>
+            <span class="text-slate-400 group-hover:text-amber-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-amber-600 transition">Global Hourly Rates Map</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Interactive world choropleth map comparing average hourly rates and budgets across 212 countries and regions.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Top Paying:</span>
+          <span class="font-bold text-amber-700">{{ metrics.task4.top_paying_countries[0].country }} (${{ metrics.task4.top_paying_countries[0].mean_hourly_rate }}/hr)</span>
+        </div>
+      </a>
+
+      <!-- Task 5 Card -->
+      <a href="/recommend" class="bg-white p-5 rounded-2xl border border-blue-200 bg-blue-50/20 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-blue-600 text-white font-mono">Task 5</span>
+            <span class="text-blue-600 font-bold">Try Now →</span>
+          </div>
+          <h3 class="font-bold text-blue-900 text-base group-hover:text-blue-600 transition">Job Recommendation Engine</h3>
+          <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+            Personalized content-based matching engine using TF-IDF vectorization, cosine similarity, budget alignment, and direct Upwork job links.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-blue-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Corpus Index:</span>
+          <span class="font-bold text-blue-700">50,000 Jobs Vectorized</span>
+        </div>
+      </a>
+
+      <!-- Task 6 Card -->
+      <a href="/task6" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-purple-50 text-purple-700 font-mono">Task 6</span>
+            <span class="text-slate-400 group-hover:text-purple-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-purple-600 transition">Monthly Dynamics Dashboard</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Tracks macroeconomic shifts over months, MoM growth deltas, contract splits, and automated dynamic data ingestion pipeline.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Latest MoM Rate:</span>
+          <span class="font-bold text-purple-700">{{ metrics.task6.latest_month.rate_change_mom_pct }}%</span>
+        </div>
+      </a>
+
+      <!-- Task 7 Card -->
+      <a href="/task7" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-cyan-50 text-cyan-700 font-mono">Task 7</span>
+            <span class="text-slate-400 group-hover:text-cyan-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-cyan-600 transition">Remote Work Landscape</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Cross-border talent arbitrage, Tier-1 client concentration vs global reach, remote-first keywords, and 2-year forecasts.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Tier 1 Premium:</span>
+          <span class="font-bold text-cyan-700">+{{ metrics.task7.remote_landscape_overview.geo_wage_premium_pct }}% Wage Gap</span>
+        </div>
+      </a>
+
+      <!-- Task 8 Card -->
+      <a href="/task8" class="bg-white p-5 rounded-2xl border border-slate-200 card-hover group shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="badge-tag bg-rose-50 text-rose-700 font-mono">Task 8</span>
+            <span class="text-slate-400 group-hover:text-rose-600 transition">→</span>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base group-hover:text-rose-600 transition">Future Trends Simulator</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">
+            Predictive scenario forecasting through 2026: Baseline, Accelerated AI Disruption, and Global Outsourcing with interactive controls.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Scenarios:</span>
+          <span class="font-bold text-rose-700">3 Predictive Trajectories</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Interactive Highlight Chart -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900">Highest-Paying Skills in Freelance Market (Task 1)</h2>
+        <p class="text-xs text-slate-500">Interactive distribution of mean hourly rates and sample volume for top skills</p>
+      </div>
+      <a href="/task1" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition">Explore Full Statistical Report →</a>
+    </div>
+    <div id="index-chart" class="w-full"></div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const chartData = {{ chart_json | safe }};
+  Plotly.newPlot('index-chart', chartData.data, chartData.layout, {responsive: true});
+</script>
+{% endblock %}
